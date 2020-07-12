@@ -1,7 +1,7 @@
 class TutorialsController < ApplicationController
-  before_action :teacher?
+  before_action :teacher?, except: [:show]
   before_action :find_tutorial, except: [:index, :new, :create]
-  before_action :author?, except: [:index, :new, :create]
+  before_action :author?, only: [:edit, :update, :destroy]
 
   def index
     @tutorials = current_user.tutorials

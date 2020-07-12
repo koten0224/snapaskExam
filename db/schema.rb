@@ -10,10 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_10_075222) do
+ActiveRecord::Schema.define(version: 2020_07_10_103124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "tutorials", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "title"
+    t.integer "price"
+    t.integer "price_type"
+    t.integer "catagory"
+    t.boolean "available"
+    t.string "url"
+    t.string "desc"
+    t.integer "expiration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_tutorials_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false

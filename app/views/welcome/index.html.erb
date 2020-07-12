@@ -3,12 +3,27 @@
   <p>Hello, <%= current_user.email %></p>
 <% end %>
 <p>
-<%= link_to "註冊", new_user_registration_path %>
-<%= link_to "登入",new_user_session_path %>
-<%= link_to "登出", destroy_user_session_path, method: "delete" %>
-<%= link_to "編輯資料", edit_user_registration_path %>
+  <%= link_to "註冊", new_user_registration_path %>
+  <%= link_to "登入",new_user_session_path %>
+  <%= link_to "登出", destroy_user_session_path, method: "delete" %>
+  <%= link_to "編輯資料", edit_user_registration_path %>
 </p>
 
 <p>
   <%= link_to "我的課程", tutorials_path %>
 </p>
+
+<h3>全部課程列表</h3>
+<table>
+<% @tutorials.each do |tutorial| %>
+  <tr>
+    <td>
+      <%= link_to tutorial.title, tutorial %>
+    </td>
+    <td>
+      講師： <%= tutorial.user.email %>
+    </td>
+  </tr>
+<% end %>
+
+</table>

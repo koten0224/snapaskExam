@@ -1,0 +1,12 @@
+2020-07-10 15:52:55.882 CST [1204] LOG:  starting PostgreSQL 12.3 on x86_64-apple-darwin19.4.0, compiled by Apple clang version 11.0.3 (clang-1103.0.32.59), 64-bit
+2020-07-10 15:52:55.883 CST [1204] LOG:  listening on IPv6 address "::1", port 5432
+2020-07-10 15:52:55.883 CST [1204] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2020-07-10 15:52:55.884 CST [1204] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2020-07-10 15:52:55.951 CST [1205] LOG:  database system was shut down at 2020-07-10 15:50:24 CST
+2020-07-10 15:52:55.961 CST [1204] LOG:  database system is ready to accept connections
+2020-07-10 15:52:58.158 CST [1276] FATAL:  lock file "postmaster.pid" already exists
+2020-07-10 15:52:58.158 CST [1276] HINT:  Is another postmaster (PID 1204) running in data directory "/usr/local/var/postgres"?
+2020-07-10 15:53:02.136 CST [1340] ERROR:  database "snapask_development" already exists
+2020-07-10 15:53:02.136 CST [1340] STATEMENT:  CREATE DATABASE "snapask_development" ENCODING = 'utf8'
+2020-07-10 15:53:02.146 CST [1351] ERROR:  database "snapask_test" already exists
+2020-07-10 15:53:02.146 CST [1351] STATEMENT:  CREATE DATABASE "snapask_test" ENCODING = 'utf8'

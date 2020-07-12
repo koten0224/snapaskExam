@@ -1,0 +1,44 @@
+<%= form_for @tutorial do |f| %>
+  <p>
+    <%= f.label :title, "課程主題" %>
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :price, "價格" %>
+    <%= f.number_field :price %>
+  </p>
+
+  <p>
+    <%= f.label :price_type, "幣種" %>
+    <%= f.select :price_type, Tutorial.price_types, selected: Tutorial.price_types[@tutorial.price_type], prompt: "請選擇" %>
+
+  </p>
+
+  <p>
+    <%= f.label :catagory, "分類" %>
+    <%= f.select :catagory, Tutorial.catagories, selected: Tutorial.catagories[@tutorial.catagory], prompt: "請選擇" %>
+  </p>
+
+  <p>
+    <%= f.label :url, "課程網址" %>
+    <%= f.text_field :url %>
+  </p>
+
+  <p>
+    <%= f.label :desc, "課程描述" %>
+    <%= f.text_area :desc , style: "height:100px;width:300px;resize:none" %>
+  </p>
+  <p>
+    <%= f.label :expiration, "有效期限" %>
+    <%= f.select :expiration, (1..30).map{ |x| [x, x] }, selected: @tutorial.expiration, prompt: "請選擇" %>
+  </p>
+  <p>
+    <%= f.label :available, "開放課程報名" %>
+    <%= f.check_box :available %>
+  </p>
+
+  <p>
+    <%= f.submit "確定" %>
+  </p>
+
+<% end %>

@@ -10,3 +10,6 @@
 2020-07-10 15:53:02.136 CST [1340] STATEMENT:  CREATE DATABASE "snapask_development" ENCODING = 'utf8'
 2020-07-10 15:53:02.146 CST [1351] ERROR:  database "snapask_test" already exists
 2020-07-10 15:53:02.146 CST [1351] STATEMENT:  CREATE DATABASE "snapask_test" ENCODING = 'utf8'
+2020-07-10 19:42:03.663 CST [21689] ERROR:  column "expiration" cannot be cast automatically to type integer
+2020-07-10 19:42:03.663 CST [21689] HINT:  You might need to specify "USING expiration::integer".
+2020-07-10 19:42:03.663 CST [21689] STATEMENT:  ALTER TABLE "tutorials" ALTER COLUMN "expiration" TYPE integer

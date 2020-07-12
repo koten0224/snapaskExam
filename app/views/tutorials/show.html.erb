@@ -1,0 +1,14 @@
+<table>
+<% @tutorial.attributes.except("created_at", "updated_at", "id", "user_id").each do |col| %>
+  <tr>
+    <td>
+      <%= col[0] %>
+    </td>
+    <td>
+      <%= col[1] %>
+    </td>
+  </tr>
+
+<% end %>
+
+</table>

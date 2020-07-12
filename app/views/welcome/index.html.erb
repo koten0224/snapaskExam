@@ -1,2 +1,14 @@
 <h1>Welcome#index</h1>
-<p>Find me in app/views/welcome/index.html.erb</p>
+<% if user_signed_in? %>
+  <p>Hello, <%= current_user.email %></p>
+<% end %>
+<p>
+<%= link_to "註冊", new_user_registration_path %>
+<%= link_to "登入",new_user_session_path %>
+<%= link_to "登出", destroy_user_session_path, method: "delete" %>
+<%= link_to "編輯資料", edit_user_registration_path %>
+</p>
+
+<p>
+  <%= link_to "我的課程", tutorials_path %>
+</p>

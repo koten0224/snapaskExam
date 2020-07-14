@@ -7,4 +7,5 @@ class User < ApplicationRecord
   has_many :tutorials
   has_many :transaction_records
   has_many :purchased_tutorials
+  has_secure_token :auth_token
 end

@@ -5,4 +5,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :tutorials
+  has_many :transaction_records
+  has_many :purchased_tutorials
 end

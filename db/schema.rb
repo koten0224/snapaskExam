@@ -10,10 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_10_103124) do
+ActiveRecord::Schema.define(version: 2020_07_14_083440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "purchased_tutorials", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "tutorial_id"
+    t.datetime "deadline"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tutorial_id"], name: "index_purchased_tutorials_on_tutorial_id"
+    t.index ["user_id"], name: "index_purchased_tutorials_on_user_id"
+  end
+
+  create_table "transaction_records", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "purchased_tutorial_id"
+    t.integer "price"
+    t.integer "price_type"
+    t.integer "expiration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["purchased_tutorial_id"], name: "index_transaction_records_on_purchased_tutorial_id"
+    t.index ["user_id"], name: "index_transaction_records_on_user_id"
+  end
 
   create_table "tutorials", force: :cascade do |t|
     t.bigint "user_id"
@@ -43,4 +65,8 @@ ActiveRecord::Schema.define(version: 2020_07_10_103124) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "purchased_tutorials", "tutorials"
+  add_foreign_key "purchased_tutorials", "users"
+  add_foreign_key "transaction_records", "purchased_tutorials"
+  add_foreign_key "transaction_records", "users"
 end

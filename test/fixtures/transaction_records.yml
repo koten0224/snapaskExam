@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  purchased_tutorial: one
+  price: 1
+  price_type: 1
+  expiration: 1
+
+two:
+  user: two
+  purchased_tutorial: two
+  price: 1
+  price_type: 1
+  expiration: 1

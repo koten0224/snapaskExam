@@ -11,5 +11,8 @@ class Tutorial < ApplicationRecord
     "TWD" => 0,
     "USD" => 1
   }
+
+  has_many :purchased_tutorials
+  has_many :transaction_records
   
 end

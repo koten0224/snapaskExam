@@ -3,5 +3,6 @@ module V0
     version 'v0', using: :path
     mount Ping
     mount Tutorial
+    mount Registration
   end
 end

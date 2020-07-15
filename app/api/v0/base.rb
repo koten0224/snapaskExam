@@ -4,5 +4,6 @@ module V0
     mount Ping
     mount Tutorial
     mount Registration
+    mount Login
   end
 end

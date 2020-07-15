@@ -6,5 +6,6 @@ module V0
     mount Tutorial
     mount Registration
     mount Login
+    mount Purchase
   end
 end

@@ -6,8 +6,26 @@ module V0
     get "/purchased_tutorials/:auth_token" do
       params do
         requires :auth_token, type: String, desc: "User authenticity token"
+        optional :catagory, type: String, desc: "Filted by catagory"
+        optional :available, type: String, desc: "Give true or false"
       end
-      present current_user.purchased_tutorials, with: V0::Entities::Purchase
+
+      result = current_user.purchased_tutorials
+                           .joins(:tutorial)
+                           .includes(:tutorial)
+                           .includes(:transaction_records)
+
+      if params.include? "catagory"
+        catagory = params["catagory"]
+        catagory_num = ::Tutorial.catagories[catagory]
+        result = result.where("tutorials.catagory = ?", catagory_num)
+      end
+
+      if params["available"] == "true"
+        result = result.where("purchased_tutorials.deadline > ?", Time.now)
+      end
+
+      present result, with: V0::Entities::Purchase
     end
 
     desc "Buy Tutorial"

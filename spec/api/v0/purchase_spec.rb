@@ -11,6 +11,7 @@ RSpec.describe "Purchase tutorials", type: :request do
   end
 
   context 'buy tutorials' do
+
     it 'should purchase tutorial' do
       get "/api/v0/purchased_tutorials/#{@user.auth_token}"
       result = JSON.parse(response.body)
@@ -67,5 +68,18 @@ RSpec.describe "Purchase tutorials", type: :request do
       expect(@user.purchased_tutorials.count).to eq(5)
 
     end
+
+    it 'should not purchase tutorial' do
+      tutorial = @teacher.tutorials.sample
+      tutorial.available = false
+      tutorial.save
+      post "/api/v0/purchased_tutorials", params: {
+        auth_token: @user.auth_token,
+        tutorial_id: tutorial.id
+      }
+      result = JSON.parse(response.body)
+      expect(result.include? "error").to eq (true)
+    end
+
   end
 end

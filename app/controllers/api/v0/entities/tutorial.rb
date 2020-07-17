@@ -3,8 +3,8 @@ class Api::V0::Entities::Tutorial < Api::V0::Entities::Base
   expose :id
   expose :title
   expose :price
-  expose :price_type
-  expose :catagory
+  expose :currency
+  expose :display_category
   expose :available
   expose :url
   expose :desc

@@ -5,7 +5,7 @@ class Api::V0::Purchase < Grape::API
   get "/purchased_tutorials/:auth_token" do
     params do
       requires :auth_token, type: String, desc: "User authenticity token"
-      optional :catagory, type: String, desc: "Filted by catagory"
+      optional :category_id, type: Integer, desc: "Filted by category_id"
       optional :available, type: String, desc: "Give true or false"
     end
 
@@ -13,11 +13,11 @@ class Api::V0::Purchase < Grape::API
                           .joins(:tutorial)
                           .includes(:tutorial)
                           .includes(:transaction_records)
+                          .includes(:category)
 
-    if params.include? "catagory"
-      catagory = params["catagory"]
-      catagory_num = Tutorial.catagories[catagory]
-      result = result.where("tutorials.catagory = ?", catagory_num)
+    if params.include? "category_id"
+      category_id = params["category_id"]
+      result = result.where("tutorials.category_id = ?", category_id)
     end
 
     if params["available"] == "true"
@@ -45,7 +45,7 @@ class Api::V0::Purchase < Grape::API
         current_user.transaction_records.create(
           purchased_tutorial_id: purchased.id,
           price: tutorial.price,
-          price_type: tutorial.price_type,
+          currency: tutorial.currency,
           expiration: tutorial.expiration
         )
 

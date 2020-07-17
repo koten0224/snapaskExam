@@ -67,15 +67,15 @@ class TutorialsController < ApplicationController
     result = params.require(:tutorial).permit(
       :title,
       :price,
-      :price_type,
-      :catagory,
+      :currency,
+      :catagory_id,
       :available,
       :url,
       :desc,
       :expiration
     )
-    result[:price_type] = result[:price_type].to_i
-    result[:catagory]   = result[:catagory].to_i
+    result[:currency] = result[:currency].to_i
+    result[:category_id]   = result[:category_id].to_i
     result[:expiration] = result[:expiration].to_i
 
     return result

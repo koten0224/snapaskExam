@@ -6,7 +6,7 @@ RSpec.describe "Purchase tutorials", type: :request do
     @teacher = create :teacher
     @user = create :user
     10.times do |x|
-      create :tutorial, user: @teacher
+      create :tutorial, user: @teacher, category: create(:category)
     end
   end
 
@@ -50,13 +50,13 @@ RSpec.describe "Purchase tutorials", type: :request do
       expect(response.status).to eq(200)
       expect(result.length).to eq(4)
 
-      catagory = ::Tutorial.catagories.find{ |key, value| value == 0 }.first
-      get "/api/v0/purchased_tutorials/#{@user.auth_token}?catagory=#{catagory}"
+      category = Category.first
+      get "/api/v0/purchased_tutorials/#{@user.auth_token}?category_id=#{category.id}"
       result = JSON.parse(response.body)
       expect(response.status).to eq(200)
       query_result = @user.purchased_tutorials
                           .joins(:tutorial)
-                          .where("tutorials.catagory = 0")
+                          .where("tutorials.category_id = ?",category.id)
       expect(result.length).to eq(query_result.count)
 
       post "/api/v0/purchased_tutorials", params: {

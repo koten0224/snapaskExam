@@ -1,18 +1,14 @@
 class Tutorial < ApplicationRecord
   belongs_to :user
-  
-  enum catagory: {
-    "lalala" => 0,
-    "yoyoyo" => 1,
-    "hohoho" => 2
-  }
+  belongs_to :category
 
-  enum price_type: {
-    "TWD" => 0,
-    "USD" => 1
-  }
+  enum currency: CURRENCIES.map
 
   has_many :purchased_tutorials
   has_many :transaction_records
+
+  def display_category
+    category.name
+  end
   
 end

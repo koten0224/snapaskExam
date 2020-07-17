@@ -3,8 +3,8 @@
 one:
   title: MyString
   price: 1
-  price_type: 1
-  catagory: 1
+  currency: 1
+  category_id: 1
   available: false
   url: MyString
   desc: MyString
@@ -13,8 +13,8 @@ one:
 two:
   title: MyString
   price: 1
-  price_type: 1
-  catagory: 1
+  currency: 1
+  category_id: 1
   available: false
   url: MyString
   desc: MyString

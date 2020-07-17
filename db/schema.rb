@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_14_101119) do
+ActiveRecord::Schema.define(version: 2020_07_17_175413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "purchased_tutorials", force: :cascade do |t|
     t.bigint "user_id"
@@ -29,7 +35,7 @@ ActiveRecord::Schema.define(version: 2020_07_14_101119) do
     t.bigint "user_id"
     t.bigint "purchased_tutorial_id"
     t.integer "price"
-    t.integer "price_type"
+    t.integer "currency"
     t.integer "expiration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -41,14 +47,15 @@ ActiveRecord::Schema.define(version: 2020_07_14_101119) do
     t.bigint "user_id"
     t.string "title"
     t.integer "price"
-    t.integer "price_type"
-    t.integer "catagory"
+    t.integer "currency"
     t.boolean "available"
     t.string "url"
     t.string "desc"
     t.integer "expiration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_tutorials_on_category_id"
     t.index ["user_id"], name: "index_tutorials_on_user_id"
   end
 
@@ -70,4 +77,5 @@ ActiveRecord::Schema.define(version: 2020_07_14_101119) do
   add_foreign_key "purchased_tutorials", "users"
   add_foreign_key "transaction_records", "purchased_tutorials"
   add_foreign_key "transaction_records", "users"
+  add_foreign_key "tutorials", "categories"
 end

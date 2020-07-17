@@ -1,11 +1,6 @@
 class Tutorial < ApplicationRecord
   belongs_to :user
-  
-  enum catagory: {
-    "lalala" => 0,
-    "yoyoyo" => 1,
-    "hohoho" => 2
-  }
+  belongs_to :category
 
   enum price_type: CURRENCIES.map
 

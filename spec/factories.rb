@@ -1,4 +1,8 @@
 FactoryBot.define do
+  factory :category do
+    name { Faker.constants.sample }
+  end
+
   factory :user do
     email { Faker::Internet.email }
     password { "111111" }

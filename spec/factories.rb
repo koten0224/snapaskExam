@@ -16,11 +16,12 @@ FactoryBot.define do
 
   factory :tutorial do
     association :user, factory: [:teacher]
+    association :category, factory: [:category]
     title { Faker::Job.field }
     price { rand(50..200) }
-    price_type { rand(0..1) }
+    currency { rand(0..1) }
     expiration { rand(5..30) }
-    catagory { rand(0..2) }
+    category_id { rand(0..2) }
     available { true }
     url { Faker::Internet.url }
     desc { Faker::Lorem.paragraph_by_chars(number: 256, supplemental: false) }

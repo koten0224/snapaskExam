@@ -7,10 +7,7 @@ class Tutorial < ApplicationRecord
     "hohoho" => 2
   }
 
-  enum price_type: {
-    "TWD" => 0,
-    "USD" => 1
-  }
+  enum price_type: CURRENCIES.map
 
   has_many :purchased_tutorials
   has_many :transaction_records

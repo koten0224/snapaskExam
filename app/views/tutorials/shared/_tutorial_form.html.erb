@@ -9,14 +9,14 @@
   </p>
 
   <p>
-    <%= f.label :price_type, "幣種" %>
-    <%= f.select :price_type, Tutorial.price_types, selected: Tutorial.price_types[@tutorial.price_type], prompt: "請選擇" %>
+    <%= f.label :currency, "幣種" %>
+    <%= f.select :currency, Tutorial.currencies, selected: Tutorial.currencies[@tutorial.currency], prompt: "請選擇" %>
 
   </p>
 
   <p>
-    <%= f.label :catagory, "分類" %>
-    <%= f.select :catagory, Tutorial.catagories, selected: Tutorial.catagories[@tutorial.catagory], prompt: "請選擇" %>
+    <%= f.label :category_id, "分類" %>
+    <%= f.select :category_id, Category.all.map{|obj|[obj.name,obj.id]}, selected: @tutorial.category_id, prompt: "請選擇" %>
   </p>
 
   <p>

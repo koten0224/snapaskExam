@@ -8,4 +8,9 @@ class User < ApplicationRecord
   has_many :transaction_records
   has_many :purchased_tutorials
   has_secure_token :auth_token
+
+  def buy
+    PurchaseService.new(self)
+  end
+
 end

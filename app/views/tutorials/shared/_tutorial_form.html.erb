@@ -1,3 +1,12 @@
+<% if @tutorial.errors.any? %>
+  <ul>
+    <% @tutorial.errors.full_messages.each do |message| %>
+      <li>
+        <%= message %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
 <%= form_for @tutorial do |f| %>
   <p>
     <%= f.label :title, "課程主題" %>
@@ -10,7 +19,7 @@
 
   <p>
     <%= f.label :currency, "幣種" %>
-    <%= f.select :currency, Tutorial.currencies, selected: Tutorial.currencies[@tutorial.currency], prompt: "請選擇" %>
+    <%= f.select :currency, Tutorial::CURRENCIES.map{|x|[x,x]}, selected: @tutorial.currency, prompt: "請選擇" %>
 
   </p>
 

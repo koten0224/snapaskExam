@@ -9,7 +9,7 @@ class Api::V0::Purchase < Grape::API
       optional :available, type: String, desc: "Give true or false"
     end
 
-    result = current_user.purchased_tutorials
+    result  = current_user.purchased_tutorials
                           .joins(:tutorial)
                           .includes(:tutorial)
                           .includes(:transaction_records)
@@ -35,11 +35,10 @@ class Api::V0::Purchase < Grape::API
     end
     tutorial = Tutorial.find(params[:tutorial_id])
     transaction = current_user.buy.tutorial(tutorial)
-    if transaction.success
-      resp = { message: transaction.message }
-    else
-      resp = { error: true, message: transaction.message }
+    unless transaction.success
+      status 400
     end
+    resp = { message: transaction.message }
     present resp
   end
 end

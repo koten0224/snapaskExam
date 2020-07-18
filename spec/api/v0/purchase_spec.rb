@@ -34,7 +34,7 @@ RSpec.describe "Purchase tutorial", type: :request do
 
     it 'should return list match that category.' do
       category = @categories.sample
-      get "/api/v0/purchased_tutorials/#{@user.auth_token}?category_id=#{category.id}"
+      get "/api/v0/purchased_tutorials/#{@user.auth_token}?category=#{category.id}"
       result = JSON.parse(response.body)
       expect(response.status).to eq(200)
       expect(result.length).to eq(category.tutorials.count)
@@ -48,6 +48,16 @@ RSpec.describe "Purchase tutorial", type: :request do
       result = JSON.parse(response.body)
       expect(response.status).to eq(200)
       expect(result.length).to eq(7)
+    end
+
+    it 'should match category and available.' do
+      category = @categories.sample
+      purchased_tutorials = @user.purchased_tutorials.joins(:tutorial).category(category.id)
+      purchased_tutorials.sample.update(deadline: 1.days.ago)
+      get "/api/v0/purchased_tutorials/#{@user.auth_token}?category=#{category.id}&available=true"
+      result = JSON.parse(response.body)
+      expect(response.status).to eq(200)
+      expect(result.length).to eq(purchased_tutorials.length - 1)
     end
   end
 

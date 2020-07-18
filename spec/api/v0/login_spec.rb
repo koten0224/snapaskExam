@@ -29,10 +29,9 @@ RSpec.describe "Authenticate", type: :request do
         email: @user.email,
         password: "zzzzzz"
       }
-      expect(response.status).to eq(201)
-
       result = JSON.parse(response.body)
-      expect(result.include? "error").to eq(true)
+      expect(response.status).to eq 400
+      expect(result).to include "message"
 
     end
   end

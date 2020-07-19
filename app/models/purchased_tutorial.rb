@@ -17,15 +17,15 @@ class PurchasedTutorial < ApplicationRecord
 
   before_create :give_deadline
 
-  def available?
-    deadline > Time.now
+  def expired?
+    deadline < Time.now
   end
 
   private
 
     def tutorial_available?
       unless tutorial.available?
-        errors[:tutorial] << "not allow to purchase."
+        errors[:tutorial] << "not available."
       end
     end
 

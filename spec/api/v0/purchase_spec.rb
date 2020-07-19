@@ -22,7 +22,7 @@ RSpec.describe "Purchase tutorial", type: :request do
     it 'should raise error.' do
       expect do
         get "/api/v0/purchased_tutorials"
-      end.to raise_error
+      end.to raise_error ActiveRecord::RecordNotFound
     end
 
     it 'should return list length 10.' do
@@ -52,7 +52,7 @@ RSpec.describe "Purchase tutorial", type: :request do
 
     it 'should match category and available.' do
       category = @categories.sample
-      purchased_tutorials = @user.purchased_tutorials.joins(:tutorial).category(category.id)
+      purchased_tutorials = @user.purchased_tutorials.category(category.id)
       purchased_tutorials.sample.update(deadline: 1.days.ago)
       get "/api/v0/purchased_tutorials/#{@user.auth_token}?category=#{category.id}&available=true"
       result = JSON.parse(response.body)
@@ -68,7 +68,7 @@ RSpec.describe "Purchase tutorial", type: :request do
         post "/api/v0/purchased_tutorials", params: {
           tutorial_id: @tutorials.sample.id
         }
-      end.to raise_error
+      end.to raise_error ActiveRecord::RecordNotFound
     end
 
     it 'should be success.' do

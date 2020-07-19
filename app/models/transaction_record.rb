@@ -2,17 +2,23 @@ class TransactionRecord < ApplicationRecord
   belongs_to :user
   belongs_to :purchased_tutorial
   has_one :tutorial, through: :purchased_tutorial
-  validate :can_buy?
+
+  validate :tutorial_available?
+  validate :expired?
+  
   before_create :bill_information
 
   private
 
-    def can_buy?
+    def tutorial_available?
       unless tutorial.available?
-        errors[:tutorial] << "not allow to purchase."
+        errors[:tutorial] << "not available."
       end
-      if purchased_tutorial.available?
-        errors[:tutorial] << "is still available."
+    end
+
+    def expired?
+      unless purchased_tutorial.expired?
+        errors[:tutorial] << "has not expired yet."
       end
     end
 

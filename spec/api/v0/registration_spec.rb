@@ -26,7 +26,7 @@ RSpec.describe "Registrations", type: :request do
 
     end
 
-    it 'should ' do
+    it 'should return 400.' do
       user = create :user
       password = "111111"
       params_list = [

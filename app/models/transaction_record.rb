@@ -3,6 +3,8 @@ class TransactionRecord < ApplicationRecord
   belongs_to :purchased_tutorial
   has_one :tutorial, through: :purchased_tutorial
 
+  enum currency: CURRENCIES
+
   validate :tutorial_available?, :expired?
   
   before_create :bill_information

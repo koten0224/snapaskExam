@@ -10,8 +10,8 @@ class PurchasedTutorial < ApplicationRecord
     .includes(:transaction_records)
     .includes(:category)
   }
-  scope :category, ->(category_id) { where("tutorials.category_id = ?", category_id)}
-  scope :available, ->(bool) { where("purchased_tutorials.deadline > ? is #{bool}", Time.now) }
+  scope :category, ->(category_id) { where("tutorials.category_id = ?", category_id.to_i)}
+  scope :available, ->(bool) { where("purchased_tutorials.deadline > ? is #{bool == "true"}", Time.now) }
 
   validate :tutorial_available?
 

@@ -17,30 +17,21 @@ RSpec.describe "Registrations", type: :request do
       result = JSON.parse(response.body)
       
       expect(response.status).to eq(201)
-      expect(result.include? "auth_token").to eq(true)
+      expect(result).to include "auth_token"
 
       token = result["auth_token"]
-
       user = User.find_by(auth_token: token)
       expect(user.email).to eq(email)
-      expect(user.valid_password? "111111").to eq(true)
+      expect(user).to be_valid_password "111111"
 
     end
 
-    it 'sould return errors' do
-
-      email = Faker::Internet.email
+    it 'should return 400.' do
+      user = create :user
       password = "111111"
-
-      post '/api/v0/sign_up', params: {
-        email: email, 
-        password: password, 
-        password_confirmation: password 
-      }
-
       params_list = [
         {
-          email: email,
+          email: user.email,
           password: password,
           password_confirmation: password
         },
@@ -57,13 +48,10 @@ RSpec.describe "Registrations", type: :request do
       ]
 
       params_list.each do |params|
-
         post '/api/v0/sign_up', params: params
-
         result = JSON.parse(response.body)
-        
-        expect(response.status).to eq(201)
-        expect(result.include? "error").to eq(true)
+        expect(response.status).to eq 400
+        expect(result).to include "message"
 
       end
     end

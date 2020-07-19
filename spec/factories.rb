@@ -21,7 +21,6 @@ FactoryBot.define do
     price { rand(50..200) }
     currency { rand(0..1) }
     expiration { rand(5..30) }
-    category_id { rand(0..2) }
     available { true }
     url { Faker::Internet.url }
     desc { Faker::Lorem.paragraph_by_chars(number: 256, supplemental: false) }

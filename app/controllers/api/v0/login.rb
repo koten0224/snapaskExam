@@ -1,5 +1,6 @@
 
 class Api::V0::Login < Grape::API
+  desc 'User login'
   post '/login' do
 
     params do
@@ -12,7 +13,8 @@ class Api::V0::Login < Grape::API
     if user&.valid_password? params[:password]
       resp = { auth_token: user.auth_token }
     else
-      resp = { error: "Email or Password invalid!" }
+      status 400
+      resp = { message: "Email or Password invalid!" }
     end
 
     present resp

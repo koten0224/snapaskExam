@@ -13,8 +13,6 @@ module PurchaseItems::Tutorial
       purchased_tutorial_id: purchased.id
     )
     if record.save
-      purchased.deadline = tutorial.expiration.days.after
-      purchased.save
       result_status true, ["Merchandise success!"]
     else
       result_status false, record.errors.full_messages

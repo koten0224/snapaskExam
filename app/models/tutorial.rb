@@ -2,7 +2,7 @@ class Tutorial < ApplicationRecord
   belongs_to :user
   belongs_to :category
 
-  enum currency: CURRENCIES.map
+  enum currency: CURRENCIES
 
   has_many :purchased_tutorials
   has_many :transaction_records

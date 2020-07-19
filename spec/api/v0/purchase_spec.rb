@@ -1,85 +1,127 @@
 require 'rails_helper'
 
-RSpec.describe "Purchase tutorials", type: :request do
+RSpec.describe "Purchase tutorial", type: :request do
 
-  before(:all) do
+  def result
+    JSON.parse(response.body)
+  end
+
+  def post_to_buy_tutorial
+    post "/api/v0/purchased_tutorials", params: {
+      auth_token: @user.auth_token,
+      tutorial_id: @tutorial.id
+    }
+  end
+
+  before(:each) do
     @teacher = create :teacher
     @user = create :user
-    10.times do |x|
-      create :tutorial, user: @teacher, category: create(:category)
+    @categories = 3.times.map{ create :category }
+    @tutorials = 10.times.map do |x|
+      create :tutorial, user: @teacher, category: @categories.sample
     end
   end
 
-  context 'buy tutorials' do
+  context 'GET /api/v0/purchased_tutorials/:auth_token' do
 
-    it 'should purchase tutorial' do
-      get "/api/v0/purchased_tutorials/#{@user.auth_token}"
-      result = JSON.parse(response.body)
-      expect(response.status).to eq(200)
-      expect(result.length).to eq(0)
-
-      @teacher.tutorials.sample(5).each_with_index do |tutorial, index|
-
-        post "/api/v0/purchased_tutorials", params: {
-          auth_token: @user.auth_token,
-          tutorial_id: tutorial.id
-        }
-        expect(response.status).to eq(201)
-        expect(@user.purchased_tutorials.count).to eq(index+1)
-
-        post "/api/v0/purchased_tutorials", params: {
-          auth_token: @user.auth_token,
-          tutorial_id: tutorial.id
-        }
-        result = JSON.parse(response.body)
-        expect(result.include? "error").to eq(true)
-
+    before(:each) do
+      @tutorials.each do |tutorial|
+        @user.buy.tutorial(tutorial)
       end
+    end
 
+    it 'should raise error.' do
+      expect do
+        get "/api/v0/purchased_tutorials"
+      end.to raise_error ActiveRecord::RecordNotFound
+    end
+
+    it 'should return list length 10.' do
       get "/api/v0/purchased_tutorials/#{@user.auth_token}"
-      result = JSON.parse(response.body)
       expect(response.status).to eq(200)
-      expect(result.length).to eq(5)
+      expect(result.length).to eq(10)
+    end
 
-      purchased_tutorial = @user.purchased_tutorials.sample
-      purchased_tutorial.deadline = 1.days.ago
-      purchased_tutorial.save
+    it 'should return list match that category.' do
+      category = @categories.sample
+      get "/api/v0/purchased_tutorials/#{@user.auth_token}?category=#{category.id}"
+      expect(response.status).to eq(200)
+      expect(result.length).to eq(category.tutorials.count)
+    end
 
+    it 'should return available list length 7.' do
+      @user.purchased_tutorials.sample(3).each do |purchased|
+        purchased.update(deadline: 1.days.ago)
+      end
       get "/api/v0/purchased_tutorials/#{@user.auth_token}?available=true"
-      result = JSON.parse(response.body)
       expect(response.status).to eq(200)
-      expect(result.length).to eq(4)
-
-      category = Category.first
-      get "/api/v0/purchased_tutorials/#{@user.auth_token}?category_id=#{category.id}"
-      result = JSON.parse(response.body)
-      expect(response.status).to eq(200)
-      query_result = @user.purchased_tutorials
-                          .joins(:tutorial)
-                          .where("tutorials.category_id = ?",category.id)
-      expect(result.length).to eq(query_result.count)
-
-      post "/api/v0/purchased_tutorials", params: {
-          auth_token: @user.auth_token,
-          tutorial_id: purchased_tutorial.tutorial_id
-      }
-      expect(response.status).to eq(201)
-      expect(@user.transaction_records.count).to eq(6)
-      expect(@user.purchased_tutorials.count).to eq(5)
-
+      expect(result.length).to eq(7)
     end
 
-    it 'should not purchase tutorial' do
-      tutorial = @teacher.tutorials.sample
-      tutorial.available = false
-      tutorial.save
-      post "/api/v0/purchased_tutorials", params: {
-        auth_token: @user.auth_token,
-        tutorial_id: tutorial.id
-      }
-      result = JSON.parse(response.body)
-      expect(result.include? "error").to eq (true)
+    it 'should match category and available.' do
+      category = @categories.sample
+      purchased_tutorials = @user.purchased_tutorials.category(category.id)
+      purchased_tutorials.sample.update(deadline: 1.days.ago)
+      get "/api/v0/purchased_tutorials/#{@user.auth_token}?category=#{category.id}&available=true"
+      expect(response.status).to eq(200)
+      expect(result.length).to eq(purchased_tutorials.length - 1)
+    end
+  end
+
+  context 'POST /api/v0/purchased_tutorials' do
+
+    before(:each) do
+      @tutorial = @tutorials.sample
     end
 
+    it 'should raise error.' do
+      expect do
+        post "/api/v0/purchased_tutorials", params: {
+          tutorial_id: @tutorials.sample.id
+        }
+      end.to raise_error ActiveRecord::RecordNotFound
+    end
+
+    it 'should be success.' do
+      post_to_buy_tutorial
+      expect(response.status).to eq 201
+      expect(result).to include "message"
+    end
+
+    it 'should not buy twice.' do
+      2.times { post_to_buy_tutorial }
+      expect(response.status).to eq 400
+      expect(result).to include "message"
+    end
+
+    it 'should not buy if tutorial is not available.' do
+      @tutorial.update(available: false)
+      post_to_buy_tutorial
+      expect(response.status).to eq 400
+      expect(result).to include "message"
+    end
+
+    it 'should be success if user purchased is expired.' do
+      @user.buy.tutorial(@tutorial)
+      purchased = @user.purchased_tutorials.find_by(tutorial_id: @tutorial.id)
+      purchased.update(deadline: 1.days.ago)
+      post_to_buy_tutorial
+      expect(response.status).to eq 201
+      expect(result).to include "message"
+      expect(@user.transaction_records.count).to eq(2)
+      expect(@user.purchased_tutorials.count).to eq(1)
+    end
+
+    it 'should not buy when tutorial is not available even though user purchased is expired.' do
+      @user.buy.tutorial(@tutorial)
+      purchased = @user.purchased_tutorials.find_by(tutorial_id: @tutorial.id)
+      purchased.update(deadline: 1.days.ago)
+      @tutorial.update(available: false)
+      post_to_buy_tutorial
+      expect(response.status).to eq 400
+      expect(result).to include "message"
+      expect(@user.transaction_records.count).to eq(1)
+      expect(@user.purchased_tutorials.count).to eq(1)
+    end
   end
 end

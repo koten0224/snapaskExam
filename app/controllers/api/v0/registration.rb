@@ -14,7 +14,8 @@ class Api::V0::Registration < Grape::API
     if user.save
       resp =  { auth_token: user.auth_token }
     else
-      resp = { error: user.errors.full_messages }
+      status 400
+      resp = { message: user.errors.full_messages }
     end
 
     present resp

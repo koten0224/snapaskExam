@@ -3,10 +3,10 @@ class TransactionRecord < ApplicationRecord
   belongs_to :purchased_tutorial
   has_one :tutorial, through: :purchased_tutorial
 
-  validate :tutorial_available?
-  validate :expired?
+  validate :tutorial_available?, :expired?
   
   before_create :bill_information
+  after_create :extend_deadline
 
   private
 
@@ -24,8 +24,12 @@ class TransactionRecord < ApplicationRecord
 
     def bill_information
       self.price = tutorial.price
-      self.currency = tutorial.currency
+      self.currency = tutorial.currency 
       self.expiration = tutorial.expiration
+    end
+
+    def extend_deadline
+      purchased_tutorial.update(deadline: expiration.days.after)
     end
 
 end

@@ -10,6 +10,7 @@ class Tutorial < ApplicationRecord
   validates :title, presence: true
   validates :currency, presence: true
   validates :price, numericality: { only_integer: true }
+  validates :url, format: { with: /\Ahttps?:\/\/[^ ]+\z/ }
   validates :expiration, numericality: {
     only_integer: true,
     greater_than: 0,

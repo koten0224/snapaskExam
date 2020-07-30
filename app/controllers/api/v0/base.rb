@@ -6,4 +6,11 @@ class Api::V0::Base < Grape::API
   mount Registration
   mount Login
   mount Purchase
+
+  add_swagger_documentation(
+    mount_path: 'doc',
+    hide_format: true,
+    hide_documentation_path: true
+  )
+
 end
